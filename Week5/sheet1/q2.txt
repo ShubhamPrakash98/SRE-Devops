@@ -1,0 +1,5 @@
+The three standard file desciptors:
+        - stdin (0)
+        - stdout (1)
+        - stderr (2)
+

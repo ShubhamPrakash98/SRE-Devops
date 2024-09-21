@@ -1,0 +1,2 @@
+3. 2>&1 this is basically used to get the error from the execution of some process to stdout stream
+
