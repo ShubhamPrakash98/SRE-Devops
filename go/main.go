@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/spf13/cobra"
 )
 
 var profitCalculator = &cobra.Command{
-	Use:   "profit-calculator",
+	Use:   "pcalculator",
 	Short: "Profit Calculator",
 	Long: `cli to calculate the profit
 	Usage: profit-calculator --taxRate 10 --revenue 100 --expenses 50
@@ -26,7 +25,7 @@ var profitCalculator = &cobra.Command{
 }
 
 var simpleCalculator = &cobra.Command{
-	Use:   "simple-calculator",
+	Use:   "calculator",
 	Short: "Simple Calculator",
 	Long: `cli to calculate the simple calculator
 	Usage: simple-calculator add 1 2
@@ -38,11 +37,15 @@ var simpleCalculator = &cobra.Command{
 			return
 		}
 
-		operation := args[0]
-		num1, err1 := strconv.ParseFloat(args[1], 64)
-		num2, err2 := strconv.ParseFloat(args[2], 64)
+		operation, _ := cmd.Flags().GetString("operation")
+		if operation == "" {
+			fmt.Println("Invalid operation provided.")
+			return
+		}
+		num1, _ := cmd.Flags().GetFloat64("num1")
+		num2, _ := cmd.Flags().GetFloat64("num2")
 
-		if err1 != nil || err2 != nil {
+		if num1 == 0 || num2 == 0 {
 			fmt.Println("Invalid numbers provided.")
 			return
 		}
@@ -71,9 +74,15 @@ var fizzBuzz = &cobra.Command{
 			fmt.Println("Please provide a number")
 			return
 		}
-		num, err := strconv.Atoi(args[0])
+
+		num, err := cmd.Flags().GetInt("num")
 		if err != nil {
 			fmt.Println("Invalid number.")
+			return
+		}
+
+		if num == 0 {
+			fmt.Println("Please give a number greater than 0.")
 			return
 		}
 		switch {
@@ -91,9 +100,9 @@ var fizzBuzz = &cobra.Command{
 
 func main() {
 	var rootCmd = &cobra.Command{
-		Use:   "Go Session 2",
-		Short: "Profit Calculator",
-		Long:  "cli to calculate the profit",
+		Use:   "go-util",
+		Short: "go-util",
+		Long:  "cli to perform operations",
 	}
 
 	rootCmd.AddCommand(profitCalculator)
@@ -104,8 +113,6 @@ func main() {
 	profitCalculator.PersistentFlags().Float64P("revenue", "r", 0, "revenue")
 	profitCalculator.PersistentFlags().Float64P("expenses", "e", 0, "expenses")
 
-	simpleCalculator.PersistentFlags().Float64P("num1", "1", 0, "number 1")
-	simpleCalculator.PersistentFlags().Float64P("num2", "2", 0, "number 2")
 	simpleCalculator.PersistentFlags().StringP("operation", "o", "", "operation")
 
 	fizzBuzz.PersistentFlags().IntP("num", "n", 0, "number")
